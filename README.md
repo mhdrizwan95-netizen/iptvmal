@@ -46,10 +46,10 @@ The workflow:
 4. Commits any changes back to the repository using the provided `GITHUB_TOKEN`.
 
 After the first successful run, you can point IPTV clients at the generated
-EPG file (assuming your default branch is `main`):
+EPG file for this repository directly:
 
 ```
-https://raw.githubusercontent.com/<your-username>/<your-repo>/main/malayalam_epg.xml
+https://raw.githubusercontent.com/mhdrizwan95-netizen/iptvmal/main/malayalam_epg.xml
 ```
 
 The playlist URL remains:
