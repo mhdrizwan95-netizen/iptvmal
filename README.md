@@ -31,3 +31,29 @@ npm run grab --- --channels=malayalam.channels.xml --output=malayalam_epg.xml
 `malayalam_epg.xml` can then be hosted anywhere that serves static files
 (e.g., GitHub Raw URLs) for use in IPTV clients alongside the Malayalam
 playlist from iptv-org: <https://iptv-org.github.io/iptv/languages/mal.m3u>.
+
+## Automate with GitHub Actions
+
+This repository includes a workflow that regenerates both
+`malayalam.channels.xml` and `malayalam_epg.xml` daily (and on manual
+trigger): `.github/workflows/generate-malayalam-epg.yml`.
+
+The workflow:
+
+1. Checks out this repository.
+2. Runs `python scripts/generate_malayalam_channels.py --output malayalam.channels.xml`.
+3. Clones `iptv-org/epg` and runs the grabber to produce `malayalam_epg.xml`.
+4. Commits any changes back to the repository using the provided `GITHUB_TOKEN`.
+
+After the first successful run, you can point IPTV clients at the generated
+EPG file (assuming your default branch is `main`):
+
+```
+https://raw.githubusercontent.com/<your-username>/<your-repo>/main/malayalam_epg.xml
+```
+
+The playlist URL remains:
+
+```
+https://iptv-org.github.io/iptv/languages/mal.m3u
+```
