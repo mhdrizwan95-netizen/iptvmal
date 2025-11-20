@@ -12,7 +12,8 @@ expected by the [`iptv-org/epg`](https://github.com/iptv-org/epg) grabber.
    ```
 
 The script downloads channel and guide metadata from the iptv-org API, filters
-Malayalam (`ml`/`mal`) entries, and writes an XML file compatible with
+for Malayalam (`ml`/`mal`) channels based in India (using channel metadata
+instead of guide-language tags), and writes an XML file compatible with
 `iptv-org/epg`.
 
 ## Grab the EPG
