@@ -6,12 +6,12 @@ entries, and writes them to an XML file compatible with iptv-org/epg.
 from __future__ import annotations
 
 import argparse
+import json
 import sys
 import xml.etree.ElementTree as ET
 from pathlib import Path
 from typing import Iterable, Mapping, Sequence
-
-import requests
+from urllib.request import urlopen
 
 GUIDES_URL = "https://iptv-org.github.io/api/guides.json"
 CHANNELS_URL = "https://iptv-org.github.io/api/channels.json"
@@ -19,15 +19,10 @@ MALAYALAM_CODES = {"ml", "mal"}
 
 
 def fetch_json(url: str) -> Sequence[Mapping[str, object]]:
-    """Return parsed JSON content from *url*.
+    """Return parsed JSON content from *url* using stdlib only."""
 
-    The iptv-org API returns arrays of dictionaries; the return type here is kept
-    generic enough for typing yet concrete enough for consumer functions.
-    """
-
-    response = requests.get(url, timeout=30)
-    response.raise_for_status()
-    return response.json()
+    with urlopen(url, timeout=30) as response:  # nosec: trusted iptv-org host
+        return json.loads(response.read().decode("utf-8"))
 
 
 def filter_malayalam_guides(guides: Iterable[Mapping[str, object]]) -> list[dict[str, object]]:
