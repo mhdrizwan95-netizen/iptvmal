@@ -1,0 +1,69 @@
+name: Generate Malayalam EPG
+
+on:
+  workflow_dispatch: {}
+  schedule:
+    # Run daily at 02:00 UTC
+    - cron: "0 2 * * *"
+
+jobs:
+  generate-epg:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          # Needed so we can push back to the same repository
+          persist-credentials: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Generate malayalam.channels.xml
+        run: |
+          python scripts/generate_malayalam_channels.py --output malayalam.channels.xml
+
+      - name: Clone iptv-org/epg
+        run: |
+          git clone --depth 1 https://github.com/iptv-org/epg.git epg
+          cd epg
+          npm ci || npm install
+
+      - name: Generate malayalam_epg.xml
+        working-directory: epg
+        run: |
+          npm run grab --- --channels=../malayalam.channels.xml --output=../malayalam_epg.xml
+
+      - name: Show generated files
+        run: |
+          ls -lh malayalam*.xml || true
+
+      - name: Commit and push if changed
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if git diff --quiet && git diff --cached --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add malayalam.channels.xml malayalam_epg.xml || true
+
+          if git diff --cached --quiet; then
+            echo "No staged changes, skipping commit."
+            exit 0
+          fi
+
+          git commit -m "chore: update Malayalam EPG XML [skip ci]"
+          git push
