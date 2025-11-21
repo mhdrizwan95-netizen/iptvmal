@@ -11,10 +11,11 @@ by the [`iptv-org/epg`](https://github.com/iptv-org/epg) grabber.
    python scripts/generate_malayalam_channels.py --output malayalam.channels.xml
    ```
 
-The script downloads the iptv-org Malayalam playlist to collect all `tvg-id`
-values, then filters `guides.json` to only those ids. The resulting XML keeps
-only the channels that actually appear in the Malayalam playlist, which keeps
-`npm run grab` fast while remaining fully compatible with IPTV clients.
+The script downloads `guides.json` and keeps only guide entries whose channel
+ids end with `.in` (iptv-org's convention for Indian channels). This guarantees
+the grabber sees a non-empty, India-focused set of channels (including all
+Malayalam entries) while staying compatible with any playlist that uses matching
+`xmltv_id` values.
 
 ## Grab the EPG
 
