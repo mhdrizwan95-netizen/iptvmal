@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Generate an iptv-org/epg channels file for Indian channels.
+"""Generate a channels file for iptv-org/epg without filtering.
 
-The script fetches iptv-org channel and guide metadata, filters to channels
-based in India, and writes an XML file compatible with `iptv-org/epg` grabber
-runs.
+The script fetches guide metadata from iptv-org and writes a channels XML file
+compatible with the `iptv-org/epg` grabber. All available guide entries are
+included; IPTV clients will map only the channels they use.
 """
 from __future__ import annotations
 
@@ -15,7 +15,6 @@ from pathlib import Path
 from urllib.request import urlopen
 
 GUIDES_URL = "https://iptv-org.github.io/api/guides.json"
-CHANNELS_URL = "https://iptv-org.github.io/api/channels.json"
 
 
 def fetch_json(url: str):
@@ -25,30 +24,26 @@ def fetch_json(url: str):
         return json.loads(response.read().decode("utf-8"))
 
 
-def build_channels_xml(channels, guides_by_id):
-    """Create the XML root element for Indian channels with guides."""
+def build_channels_xml(guides):
+    """Create the XML root element with all available guide entries."""
 
     root = ET.Element("channels")
+    seen: set[tuple[str, str, str]] = set()
 
-    for guide in guides_by_id:
+    for guide in guides:
         channel_id = guide.get("channel")
-        if not channel_id:
-            continue
-
-        channel = channels.get(channel_id)
-        if not channel:
-            continue
-
-        countries = channel.get("countries") or []
-        if "IN" not in countries:
-            continue
-
         site = guide.get("site")
         site_id = guide.get("site_id")
-        if not site or not site_id:
+
+        if not channel_id or not site or not site_id:
             continue
 
-        name = guide.get("site_name") or channel.get("name") or channel_id
+        key = (str(site), str(site_id), str(channel_id))
+        if key in seen:
+            continue
+        seen.add(key)
+
+        name = guide.get("site_name") or channel_id
         lang = guide.get("lang") or "en"
 
         element = ET.SubElement(
@@ -56,14 +51,21 @@ def build_channels_xml(channels, guides_by_id):
             "channel",
             {
                 "site": str(site),
-                "lang": str(lang),
-                "xmltv_id": str(channel_id),
                 "site_id": str(site_id),
+                "xmltv_id": str(channel_id),
+                "lang": str(lang),
             },
         )
         element.text = str(name)
 
-    root[:] = sorted(root, key=lambda elem: (elem.text or "", elem.get("xmltv_id") or ""))
+    root[:] = sorted(
+        root,
+        key=lambda elem: (
+            elem.get("site") or "",
+            elem.get("site_id") or "",
+            elem.get("xmltv_id") or "",
+        ),
+    )
     return root
 
 
@@ -77,15 +79,14 @@ def write_xml(root: ET.Element, destination: Path) -> None:
 
 def generate(output_path: Path) -> None:
     guides = fetch_json(GUIDES_URL)
-    channels_list = fetch_json(CHANNELS_URL)
-
-    channels_by_id = {str(channel.get("id")): channel for channel in channels_list if channel.get("id")}
-    xml_root = build_channels_xml(channels_by_id, guides)
+    xml_root = build_channels_xml(guides)
     write_xml(xml_root, output_path)
 
 
 def parse_args(argv: list[str]) -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Generate Indian channel map for iptv-org/epg")
+    parser = argparse.ArgumentParser(
+        description="Generate an iptv-org/epg channels file from guide metadata",
+    )
     parser.add_argument(
         "--output",
         default="malayalam.channels.xml",

@@ -11,9 +11,10 @@ by the [`iptv-org/epg`](https://github.com/iptv-org/epg) grabber.
    python scripts/generate_malayalam_channels.py --output malayalam.channels.xml
    ```
 
-The script downloads channel and guide metadata from the iptv-org API, keeps
-only Indian channels (country code `IN`), and writes an XML file compatible
-with `iptv-org/epg`.
+The script downloads guide metadata from the iptv-org API, deduplicates entries,
+and writes an XML file compatible with `iptv-org/epg`. All guide entries are
+included—your IPTV client will map only the channels referenced in its
+playlist (e.g., Malayalam channels from the iptv-org Malayalam playlist).
 
 ## Grab the EPG
 
