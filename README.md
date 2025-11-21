@@ -1,7 +1,7 @@
 # Malayalam EPG Helper
 
-This repository provides a helper script to generate the Malayalam channel map
-expected by the [`iptv-org/epg`](https://github.com/iptv-org/epg) grabber.
+This repository provides a helper script to generate the channel map expected
+by the [`iptv-org/epg`](https://github.com/iptv-org/epg) grabber.
 
 ## Generate `malayalam.channels.xml`
 
@@ -11,10 +11,9 @@ expected by the [`iptv-org/epg`](https://github.com/iptv-org/epg) grabber.
    python scripts/generate_malayalam_channels.py --output malayalam.channels.xml
    ```
 
-The script downloads channel and guide metadata from the iptv-org API, filters
-for Malayalam (`ml`/`mal`) channels based in India (using channel metadata
-instead of guide-language tags), and writes an XML file compatible with
-`iptv-org/epg`.
+The script downloads channel and guide metadata from the iptv-org API, keeps
+only Indian channels (country code `IN`), and writes an XML file compatible
+with `iptv-org/epg`.
 
 ## Grab the EPG
 
