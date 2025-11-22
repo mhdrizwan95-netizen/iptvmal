@@ -1,4 +1,4 @@
-#EXTM3U url-tvg="https://avkb.short.gy/epg.xml.gz"
+#EXTM3U url-tvg="https://raw.githubusercontent.com/mhdrizwan95-netizen/iptvmal/main/epg.xml.gz" refresh="3600"
 #EXTINF:-1 tvg-name="9x Jhakaas" tvg-id="441" tvg-logo="https://i.imgur.com/aZ0f85I.png" group-title="Music",9x Jhakaas
 https://amg01281-9xmediapvtltd-9xjhakaas-samsungin-ci2cs.amagi.tv/playlist/amg01281-9xmediapvtltd-9xjhakaas-samsungin/playlist.m3u8
 #EXTINF:-1 tvg-name="9X Tashan" tvg-id="732" tvg-logo="https://i.imgur.com/MMR1RMF.png" group-title="Music",9X Tashan

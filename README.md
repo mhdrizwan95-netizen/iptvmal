@@ -23,14 +23,14 @@ The playlist includes a selection of Indian channels across various genres inclu
 ### M3U Playlist URL
 To use this playlist, enter the following URL into your IPTV player:
 ```
-https://[Your-Username].github.io/[Your-Repo-Name]/india.m3u
+https://mhdrizwan95-netizen.github.io/iptvmal/india.m3u
 ```
-*(Replace `[Your-Username]` and `[Your-Repo-Name]` with your actual GitHub username and repository name if you fork this, or use the raw link from this repo once deployed.)*
+*(Replace `mhdrizwan95-netizen` and `iptvmal` with your actual GitHub username and repository name if you fork this, or use the raw link from this repo once deployed.)*
 
 ### EPG URL
-The playlist is pre-configured to use the following EPG source:
+The playlist is pre-configured to use the EPG hosted in this repository, which is automatically mirrored from reliable community sources daily:
 ```
-https://avkb.short.gy/epg.xml.gz
+https://raw.githubusercontent.com/mhdrizwan95-netizen/iptvmal/main/epg.xml.gz
 ```
 Most players should automatically detect this from the playlist header. If your player requires a separate EPG URL, you can use the one above.
 
