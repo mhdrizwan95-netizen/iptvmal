@@ -1,61 +1,51 @@
-# Malayalam EPG Helper
+# GitHub-Hosted Indian IPTV Playlist & EPG (Educational)
 
-This repository provides a helper script to generate the channel map expected
-by the [`iptv-org/epg`](https://github.com/iptv-org/epg) grabber.
+## Project Description
+This repository hosts a curated M3U playlist of free-to-air Indian TV channels for educational purposes. The playlist is designed to be used with any IPTV player that supports M3U and XMLTV formats. It integrates with a publicly available Electronic Program Guide (EPG) to provide channel information.
 
-## Generate `malayalam.channels.xml`
+## Disclaimer
+**This project is for educational purposes only.**
+All content links are gathered from publicly available sources on the internet. This repository does not host any video content or streams. The maintainers are not responsible for the availability, legality, or content of the streams. If you are a copyright holder and believe your content is being linked to improperly, please contact the source of the stream or submit an issue/pull request to remove the link from this playlist.
 
-1. Run the generator (no external dependencies needed):
+## Channel List
+The playlist includes a selection of Indian channels across various genres including:
+- News
+- Entertainment
+- Movies
+- Music
+- Religious
+- Regional (Hindi, Tamil, Telugu, Malayalam, Kannada, Bengali, etc.)
 
-   ```bash
-   python scripts/generate_malayalam_channels.py --output malayalam.channels.xml
-   ```
+(Note: Channel availability depends on the source streams and may change over time.)
 
-The script downloads `guides.json` and keeps only guide entries whose channel
-ids end with `.in` (iptv-org's convention for Indian channels). This guarantees
-the grabber sees a non-empty, India-focused set of channels (including all
-Malayalam entries) while staying compatible with any playlist that uses matching
-`xmltv_id` values.
+## Usage Instructions
 
-## Grab the EPG
-
-With `malayalam.channels.xml` generated, you can build the EPG file using
-`iptv-org/epg`:
-
-```bash
-git clone https://github.com/iptv-org/epg.git
-cd epg
-npm install
-cp /path/to/malayalam.channels.xml .
-npm run grab --- --channels=malayalam.channels.xml --output=malayalam_epg.xml
+### M3U Playlist URL
+To use this playlist, enter the following URL into your IPTV player:
 ```
-
-`malayalam_epg.xml` can then be hosted anywhere that serves static files
-(e.g., GitHub Raw URLs) for use in IPTV clients alongside the Malayalam
-playlist from iptv-org: <https://iptv-org.github.io/iptv/languages/mal.m3u>.
-
-## Automate with GitHub Actions
-
-This repository includes a workflow that regenerates both
-`malayalam.channels.xml` and `malayalam_epg.xml` daily (and on manual
-trigger): `.github/workflows/generate-malayalam-epg.yml`.
-
-The workflow:
-
-1. Checks out this repository.
-2. Runs `python scripts/generate_malayalam_channels.py --output malayalam.channels.xml`.
-3. Clones `iptv-org/epg` and runs the grabber to produce `malayalam_epg.xml`.
-4. Commits any changes back to the repository using the provided `GITHUB_TOKEN`.
-
-After the first successful run, you can point IPTV clients at the generated
-EPG file for this repository directly:
-
+https://[Your-Username].github.io/[Your-Repo-Name]/india.m3u
 ```
-https://raw.githubusercontent.com/mhdrizwan95-netizen/iptvmal/main/malayalam_epg.xml
-```
+*(Replace `[Your-Username]` and `[Your-Repo-Name]` with your actual GitHub username and repository name if you fork this, or use the raw link from this repo once deployed.)*
 
-The playlist URL remains:
+### EPG URL
+The playlist is pre-configured to use the following EPG source:
+```
+https://avkb.short.gy/epg.xml.gz
+```
+Most players should automatically detect this from the playlist header. If your player requires a separate EPG URL, you can use the one above.
 
-```
-https://iptv-org.github.io/iptv/languages/mal.m3u
-```
+### Compatible Players
+- **VLC Media Player** (PC/Mobile)
+- **TiviMate** (Android TV)
+- **IPTV Smarters**
+- **OTT Navigator**
+- **Kodi** (PVR IPTV Simple Client)
+
+## Maintenance
+The playlist is periodically checked for dead links.
+- **Manual Testing:** We recommend testing links in VLC.
+- **Automated Checks:** A GitHub Action workflow is set up to validate streams.
+
+## Credits
+- Channel links sourced from [iptv-org](https://github.com/iptv-org/iptv).
+- EPG data provided by [mitthu786/tvepg](https://github.com/mitthu786/tvepg).
