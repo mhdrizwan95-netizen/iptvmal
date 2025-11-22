@@ -12,15 +12,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install IPTV Checker
-        run: npm install -g iptv-checker-cli
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
 
-      - name: Check Playlist
-        run: iptv-checker -i india.m3u -o india.m3u -t 10000
+      - name: Validate playlist streams
+        run: python check_streams.py india.m3u --timeout 10 --workers 20
         continue-on-error: true
-        # We continue on error because we want to commit changes even if some streams fail (iptv-checker might remove them or just report)
-        # Wait, iptv-checker default behavior with -o is to output good channels.
-        # If we want to keep the file even if some fail, that's fine.
 
       - name: Commit and Push changes
         run: |

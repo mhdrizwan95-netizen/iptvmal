@@ -46,6 +46,15 @@ The playlist is periodically checked for dead links.
 - **Manual Testing:** We recommend testing links in VLC.
 - **Automated Checks:** A GitHub Action workflow is set up to validate streams.
 
+### Local stream validation
+If you want to validate the playlist without relying on npm packages, use the bundled Python checker:
+
+```bash
+python check_streams.py india.m3u
+```
+
+Use `--timeout` to adjust request timeouts and `--workers` to change concurrency. The script relies only on the Python standard library and prints reachable and unreachable streams so you can quickly update broken entries.
+
 ## Credits
 - Channel links sourced from [iptv-org](https://github.com/iptv-org/iptv).
 - EPG data provided by [mitthu786/tvepg](https://github.com/mitthu786/tvepg).
